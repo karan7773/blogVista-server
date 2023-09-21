@@ -1,7 +1,7 @@
 const express=require('express')
 const cors=require('cors')
 const {registerUser,loginUser,getProfile,logout}=require('../controller/authController')
-const {newPost,getAllPosts}=require('../controller/postController')
+const {newPost,getAllPosts,getPost}=require('../controller/postController')
 
 const router=express.Router();
 
@@ -28,4 +28,7 @@ router.post('/newpost',newPost);
 
 //get all posts route
 router.get('/getAllPosts',getAllPosts)
+
+//get specific post details
+router.get('/post/:id',getPost)
 module.exports = router 

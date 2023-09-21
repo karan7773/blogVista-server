@@ -1,4 +1,6 @@
 const Post=require('../model/Postmodel')
+const jwt=require('jsonwebtoken');  
+
 const newPost=async (req,res)=>{
     try{
         const {title,summary,content}=req.body;
@@ -14,13 +16,23 @@ const newPost=async (req,res)=>{
                 error:'Summary must'
             })
         }
-
-        const post=await Post.create({
-            title:title,
-            summary:summary,
-            content:content
-        })
-        return res.json(post);
+        const {token}=req.cookies;
+        if(token){
+            jwt.verify(token,process.env.JWT_SECRET,{},async(err,user)=>{
+                if(err) throw err;
+                const post=await Post.create({
+                    title:title,
+                    summary:summary,
+                    content:content,
+                    createdAt: new Date(),
+                    author:user.id
+                })
+                return res.json(post);
+            })
+        }else{
+        res.json(null)
+    }
+        
     }catch(err){
         console.log(err);
     }
@@ -28,7 +40,10 @@ const newPost=async (req,res)=>{
 
 const getAllPosts=async (req,res)=>{
     try{
-        const posts=await Post.find({});
+        const posts=await Post.find({})
+        .populate('author')
+        .sort({createdAt:-1})
+        .limit(20);
         // console.log(posts);
         return res.json(posts)
     }catch(err){
@@ -36,7 +51,18 @@ const getAllPosts=async (req,res)=>{
     }
 }
 
+const getPost=async(req,res)=>{
+    const {id}=req.params;
+    try{
+        const post=await Post.findById(id).populate('author',['name']);
+        return res.json(post)
+    }catch(error){
+        console.log(error);
+    }
+}
+
 module.exports={
     newPost,
-    getAllPosts
+    getAllPosts,
+    getPost
 }
