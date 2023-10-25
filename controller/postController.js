@@ -3,7 +3,7 @@ const jwt=require('jsonwebtoken');
 
 const newPost=async (req,res)=>{
     try{
-        const {title,summary,content}=req.body;
+        const {title,summary,content,files}=req.body;
 
         if(!title){
             return res.json({
@@ -25,7 +25,8 @@ const newPost=async (req,res)=>{
                     summary:summary,
                     content:content,
                     createdAt: new Date(),
-                    author:user.id
+                    author:user.id,
+                    image:files
                 })
                 return res.json(post);
             })
@@ -74,7 +75,8 @@ const deletePost=async(req,res)=>{
 const UpdatePost=async(req,res)=>{
     const {id}=req.params;
     try{
-        const {title,summary,content}=req.body;
+        const {title,summary,content,files}=req.body;
+        // console.log(files);
 
         if(!title){
             return res.json({
@@ -96,7 +98,8 @@ const UpdatePost=async(req,res)=>{
                     summary:summary,
                     content:content,
                     createdAt: new Date(),
-                    author:user.id
+                    author:user.id,
+                    image:files
                 })
                 return res.json(post);
             })
