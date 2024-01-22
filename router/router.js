@@ -2,7 +2,6 @@ const express=require('express')
 const cors=require('cors')
 const {registerUser,loginUser,getProfile,logout}=require('../controller/authController')
 const {newPost,getAllPosts,getPost,deletePost,UpdatePost}=require('../controller/postController')
-
 const router=express.Router();
 
 //middleware
