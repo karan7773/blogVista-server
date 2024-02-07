@@ -20,6 +20,9 @@ const PostSchema=new mongoose.Schema({
     },
     image:{
         type:String
+    },
+    like:{
+        type:Array
     }
 })
 

@@ -26,7 +26,8 @@ const newPost=async (req,res)=>{
                     content:content,
                     createdAt: new Date(),
                     author:user.id,
-                    image:files
+                    image:files,
+                    like:[]
                 })
                 return res.json(post);
             })
@@ -112,10 +113,29 @@ const UpdatePost=async(req,res)=>{
     }
 }
 
+const LikePost=async(req,res)=>{
+    try {
+        const post=await Post.findById(req.params.id);
+        console.log(req.body.user_id);
+        if(post.like.filter((l)=>l.user==req.body.user_id).length>0){
+            return res.status(409).send("You have already Liked this Post");
+        }
+        else{
+            await post.like.push({user: req.body.user_id});
+            await post.save();
+            return res.status(201).send(post.like); 
+        }  
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server Error");
+    }
+}
+
 module.exports={
     newPost,
     getAllPosts,
     getPost,
     deletePost,
-    UpdatePost
+    UpdatePost,
+    LikePost
 }
