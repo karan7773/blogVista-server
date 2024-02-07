@@ -131,11 +131,30 @@ const LikePost=async(req,res)=>{
     }
 }
 
+const  DislikePost=async(req,res)=>{
+    try {
+        const post=await Post.findById(req.params.id);
+        if(post.like.filter((l)=>l.user==req.body.user_id).length===0){
+            return res.status(409).send("You have not yet Liked this Post");
+        }
+        else{
+            const removeIdx=post.like.map((l)=>l.user.toString())
+            post.like.splice(removeIdx,1)
+            await post.save()
+            return res.status(201).send(post.like); 
+        }
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send("Server Error");    
+    }
+}
+
 module.exports={
     newPost,
     getAllPosts,
     getPost,
     deletePost,
     UpdatePost,
-    LikePost
+    LikePost,
+    DislikePost
 }

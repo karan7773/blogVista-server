@@ -1,7 +1,7 @@
 const express=require('express')
 const cors=require('cors')
 const {registerUser,loginUser,getProfile,logout}=require('../controller/authController')
-const {newPost,getAllPosts,getPost,deletePost,UpdatePost,LikePost}=require('../controller/postController')
+const {newPost,getAllPosts,getPost,deletePost,UpdatePost,LikePost,DislikePost}=require('../controller/postController')
 const router=express.Router();
 
 //middleware
@@ -39,5 +39,8 @@ router.patch('/update/:id',UpdatePost)
 
 //like Post
 router.patch('/post/like/:id',LikePost)
+
+//dislike Post
+router.patch('/post/dislike/:id',DislikePost)
 
 module.exports = router 
